@@ -1,3 +1,4 @@
+require 'set'
 require 'pry-byebug'
 # Solution for solving 'number of country problem'
 # see the pdf files in repository
@@ -6,6 +7,24 @@ class CountryCounter
 
   def initialize(map = nil)
     @map = map
+  end
+
+  # build a country from given index. A country is array of index of adjacent
+  #   cells which have same value of @map[row][col]
+  def build_country(row, col)
+    to_search = [[row, col]]
+    country = Set.new
+
+    loop do
+      target = to_search.pop
+      break unless target
+      country.add(target)
+      neighbors(target[0], target[1]).map do |candidate|
+        to_search << candidate unless country.include? candidate
+      end
+    end
+
+    country
   end
 
   # return array of indexs of neighbored_countries
