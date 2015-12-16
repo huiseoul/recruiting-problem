@@ -92,7 +92,7 @@ describe CountryCounter do
   end
 
   describe '#build_country' do
-    it 'returns a country(array of index) built form given index, case 1' do
+    it 'returns a country built form given index, case 1' do
       expect(country_counter.build_country(0, 0).cells)
         .to match_array([[0, 0]])
     end
