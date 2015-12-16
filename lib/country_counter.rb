@@ -1,9 +1,9 @@
 # Solution for solving 'number of country problem'
 # see the pdf files in repository
-class Solution
-  attr_reader :problem
+class CountryCounter
+  attr_reader :map
 
-  def initialize(problem = nil)
-    @problem = problem
+  def initialize(map = nil)
+    @map = map
   end
 end
