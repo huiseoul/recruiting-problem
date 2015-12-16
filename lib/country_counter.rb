@@ -1,26 +1,27 @@
+require 'country'
 require 'pry-byebug'
 # Solution for solving 'number of country problem'
 # see the pdf files in repository
 class CountryCounter
-  attr_reader :map
+  attr_reader :map, :countries
 
   def initialize(map = nil)
     @map = map
-    @count = 0
+    @countries = []
     @checked = Array.new(@map.size) { Array.new(@map[0].size) } unless @map.nil?
   end
 
   def solve
-    return @count if @map.nil? || @count > 0
+    return @countries.size if @map.nil? || !@countries.empty?
     @map.each_index do |row|
       @map[row].each_index do |col|
-        unless marked_as_checked(row, col)
-          mark_as_checked(build_country(row, col))
-          @count += 1
-        end
+        next if marked_as_checked(row, col)
+        country = build_country(row, col)
+        mark_as_checked(country)
+        @countries << country
       end
     end
-    @count
+    @countries.size
   end
 
   def marked_as_checked(row, col)
@@ -29,23 +30,24 @@ class CountryCounter
 
   # Set checked to true not to explore already visited cell
   def mark_as_checked(country)
-    country.each do |index|
-      @checked[index[0]][index[1]] = true
+    country.cells.each do |cell|
+      @checked[cell[0]][cell[1]] = true
     end
   end
 
-  # build a country from given index. A country is array of index of adjacent
-  #   cells which have same value of @map[row][col]
+  # build a country from given cell. A country has a code and array of index of
+  # adjacent cells which have same value of @map[row][col]
+  # see country.rb
   def build_country(row, col)
     to_search = [[row, col]]
-    country = []
+    country = Country.new(@map[row][col])
 
     loop do
       target = to_search.pop
       break unless target
-      country << target
+      country.cells << target
       neighbors(target[0], target[1]).each do |candidate|
-        to_search << candidate unless country.include? candidate
+        to_search << candidate unless country.cells.include? candidate
       end
     end
 
