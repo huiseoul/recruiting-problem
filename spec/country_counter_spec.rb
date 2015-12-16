@@ -107,4 +107,18 @@ describe CountryCounter do
         .to match_array([[6, 1], [6, 2]])
     end
   end
+
+  describe '#solve' do
+    context 'without given map' do
+      it 'returns 0' do
+        expect(counter_without_map.solve).to be 0
+      end
+    end
+
+    context 'with given map' do
+      it 'returns 11' do
+        expect(country_counter.solve).to be 11
+      end
+    end
+  end
 end
