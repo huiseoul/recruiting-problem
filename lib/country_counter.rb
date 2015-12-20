@@ -8,14 +8,14 @@ class CountryCounter
   def initialize(map = nil)
     @map = map
     @countries = []
-    @checked = Array.new(@map.size) { Array.new(@map[0].size) } unless @map.nil?
+    @checker_map = Array.new(map.size) { Array.new(map[0].size) } unless map.nil?
   end
 
   def solve
     return @countries.size if @map.nil? || !@countries.empty?
     @map.each_index do |row|
       @map[row].each_index do |col|
-        next if marked_as_checked(row, col)
+        next if checked?(row, col)
         country = build_country(row, col)
         mark_as_checked(country)
         @countries << country
@@ -24,14 +24,14 @@ class CountryCounter
     @countries.size
   end
 
-  def marked_as_checked(row, col)
-    !@checked[row][col].nil?
+  def checked?(row, col)
+    @checker_map[row][col]
   end
 
   # Set checked to true not to explore already visited cell
   def mark_as_checked(country)
     country.cells.each do |cell|
-      @checked[cell[0]][cell[1]] = true
+      @checker_map[cell[0]][cell[1]] = true
     end
   end
 
@@ -55,15 +55,14 @@ class CountryCounter
   end
 
   # return array of indexs of neighbored_countries
-  # if none, return nil
+  # if none, return empty array
   def neighbors(row, col)
-    neighbored_countries = [
+    [
       left_neighbor(row, col),
       right_neighbor(row, col),
       up_neighbor(row, col),
       down_neighbor(row, col)
-    ]
-    neighbored_countries.compact
+    ].compact
   end
 
   # return index of left-neighbored country
